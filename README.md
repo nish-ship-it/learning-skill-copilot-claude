@@ -59,22 +59,29 @@ pip install -r requirements.txt
 | 3 | [docs/03-ml-data-skills.md](docs/03-ml-data-skills.md) | Skills for pandas, scikit-learn, and notebooks |
 | 4 | [docs/04-sharing-across-org.md](docs/04-sharing-across-org.md) | Share skills across your GitHub org |
 | 5 | [docs/05-using-skills-in-cli.md](docs/05-using-skills-in-cli.md) | How to actually invoke skills in a `copilot` session |
+| 6 | [docs/06-mlops-with-skills.md](docs/06-mlops-with-skills.md) | MLOps pipeline with MLflow + 3 new skills |
 
 ## Example run output
 
-See [`docs/runs/2026-03-11-workflow-run.md`](docs/runs/2026-03-11-workflow-run.md) for a fully captured end-to-end run — all three skills executed against the example project, with every output saved. Use it as a reference or org demo.
+| Run | File | Description |
+|-----|------|-------------|
+| Skill workflow | [`docs/runs/2026-03-11-workflow-run.md`](docs/runs/2026-03-11-workflow-run.md) | All 3 original skills executed end-to-end |
+| MLOps pipeline | [`docs/runs/2026-03-11-mlops-run.md`](docs/runs/2026-03-11-mlops-run.md) | Full 4-stage MLOps run with 2 MLflow experiments compared |
 
 ---
 
 ## Example skills (ready to use)
 
-All three skills live in [`.github/copilot/skills/`](.github/copilot/skills/) and are active in this repo automatically.
+All six skills live in [`.github/copilot/skills/`](.github/copilot/skills/) and are active in this repo automatically.
 
 | Skill | File | What it does |
 |-------|------|--------------|
-| `explore-dataset` | [explore-dataset.md](.github/copilot/skills/explore-dataset.md) | Runs EDA on a CSV: shape, dtypes, nulls, distributions |
+| `explore-dataset` | [explore-dataset.md](.github/copilot/skills/explore-dataset.md) | EDA: shape, dtypes, nulls, distributions, correlations |
 | `setup-env` | [setup-env.md](.github/copilot/skills/setup-env.md) | Sets up a Python venv with the right dependencies |
-| `explain-notebook` | [explain-notebook.md](.github/copilot/skills/explain-notebook.md) | Summarises what a Jupyter notebook does and suggests improvements |
+| `explain-notebook` | [explain-notebook.md](.github/copilot/skills/explain-notebook.md) | Summarises and reviews a Jupyter notebook |
+| `validate-data` | [validate-data.md](.github/copilot/skills/validate-data.md) | Validates CSV before training (schema, nulls, balance) |
+| `train-model` | [train-model.md](.github/copilot/skills/train-model.md) | Runs full MLOps pipeline with MLflow tracking |
+| `evaluate-model` | [evaluate-model.md](.github/copilot/skills/evaluate-model.md) | Compares runs, shows leaderboard, identifies best model |
 
 ---
 
@@ -82,14 +89,21 @@ All three skills live in [`.github/copilot/skills/`](.github/copilot/skills/) an
 
 ```
 .
-├── docs/                    # Learning guides (read in order)
+├── docs/                    # Learning guides (read in order: 00 → 06)
+│   └── runs/                # Captured pipeline run outputs
 ├── .github/
 │   ├── copilot-instructions.md   # Project context for every Copilot session
-│   └── copilot/skills/           # Custom skill definitions
+│   └── copilot/skills/           # 6 custom skill definitions
 ├── examples/
-│   ├── data/sample.csv           # Sample dataset to practise with
-│   ├── notebooks/eda_demo.ipynb  # Demo EDA notebook
-│   └── src/ml_pipeline.py        # Simple ML pipeline
+│   ├── data/sample.csv           # 220-row dataset (9 features, missing values)
+│   ├── notebooks/eda_demo.ipynb  # Demo EDA notebook (fully executed)
+│   └── src/
+│       ├── data_validation.py    # Stage 1: validate
+│       ├── preprocessing.py      # Stage 2: impute/encode/scale
+│       ├── train_mlflow.py       # Stage 3: train + MLflow
+│       ├── evaluate.py           # Stage 4: leaderboard
+│       ├── pipeline_runner.py    # Orchestrator
+│       └── ml_pipeline.py        # Original simple pipeline
 └── requirements.txt
 ```
 

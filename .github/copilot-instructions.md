@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Learning and reference repository for building, managing, and sharing GitHub Copilot CLI skills in ML/data analytics projects. Intended for org-wide knowledge sharing. Stack: Python, pandas, scikit-learn, Jupyter.
+Learning and reference repository for building, managing, and sharing GitHub Copilot CLI skills in ML/data analytics projects. Intended for org-wide knowledge sharing. Stack: Python, pandas, scikit-learn, Jupyter, MLflow.
 
 ## Commands
 
@@ -11,7 +11,20 @@ Learning and reference repository for building, managing, and sharing GitHub Cop
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-# Run the example ML pipeline
+# MLOps pipeline (full 4-stage run with MLflow tracking)
+python examples/src/pipeline_runner.py                            # default params
+python examples/src/pipeline_runner.py examples/data/sample.csv \
+  --n-estimators 200 --max-depth 8 --run-name my-run             # custom params
+
+# Individual pipeline stages
+python examples/src/data_validation.py examples/data/sample.csv  # Stage 1: validate
+python examples/src/train_mlflow.py examples/data/sample.csv     # Stage 3: train + log
+python examples/src/evaluate.py                                   # Stage 4: leaderboard
+
+# MLflow UI
+mlflow ui --port 5000   # then open http://127.0.0.1:5000
+
+# Original simple pipeline (pre-MLOps reference)
 python examples/src/ml_pipeline.py
 
 # Launch the example notebook
@@ -27,15 +40,24 @@ gh copilot explain "<shell command>"           # explain a command
 ```
 .github/copilot/skills/   ← project-scoped skill definitions (one .md per skill)
 .github/copilot-instructions.md  ← this file (project context for all sessions)
-docs/                     ← step-by-step learning guides (00 through 04)
+docs/                     ← step-by-step learning guides (00 through 06)
+docs/runs/                ← captured output from each pipeline run
 examples/
-  data/sample.csv         ← 25-row income prediction dataset
+  data/sample.csv         ← 220-row income prediction dataset (9 features)
   notebooks/eda_demo.ipynb
-  src/ml_pipeline.py      ← load → preprocess → train → evaluate pipeline
-requirements.txt          ← pandas 2.2.2, scikit-learn 1.4.2, jupyter, matplotlib, seaborn
+  src/
+    data_validation.py    ← Stage 1: schema/null/balance checks
+    preprocessing.py      ← Stage 2: impute → encode → scale → split
+    train_mlflow.py       ← Stage 3: train RandomForest + log to MLflow
+    evaluate.py           ← Stage 4: compare runs, leaderboard
+    pipeline_runner.py    ← Orchestrator: runs all 4 stages in sequence
+    ml_pipeline.py        ← Original simple pipeline (pre-MLOps reference)
+mlruns/                   ← MLflow tracking data (git-ignored, local only)
+requirements.txt          ← pandas, scikit-learn, jupyter, matplotlib, seaborn, mlflow
 ```
 
-The example ML pipeline in `examples/src/ml_pipeline.py` follows a strict functional structure: `load_data` → `preprocess` → `train` → `evaluate` → `main`. When adding to it, keep this separation.
+**Pipeline flow:** `data_validation` → `preprocessing` → `train_mlflow` → `evaluate`  
+The orchestrator `pipeline_runner.py` accepts `--n-estimators`, `--max-depth`, and `--run-name` flags to support multi-run experiments.
 
 ## Skills in this repo
 
@@ -44,6 +66,9 @@ The example ML pipeline in `examples/src/ml_pipeline.py` follows a strict functi
 | `explore-dataset.md` | EDA, dataset profiling, nulls, distributions, correlations |
 | `setup-env.md` | Python env setup, venv creation, installing requirements |
 | `explain-notebook.md` | What a notebook does, notebook review, summarising `.ipynb` |
+| `validate-data.md` | Data validation, check data quality, is my CSV ready for training |
+| `train-model.md` | Train the model, run the ML pipeline, start an MLflow experiment |
+| `evaluate-model.md` | Compare runs, show leaderboard, which hyperparameters worked best |
 
 ## Conventions
 
