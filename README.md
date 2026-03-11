@@ -149,6 +149,67 @@ The added complexity drives real MLOps requirements: imputation, class-weighted 
 
 ---
 
+## Pipeline results: v1 vs v2 (without MLflow)
+
+The original `ml_pipeline.py` (no MLflow, no imputation) run on both datasets side-by-side:
+
+### Dataset v1 — 25 rows / 6 columns / no missing values / balanced
+
+```
+Train: 20 rows | Test: 5 rows
+
+Accuracy: 80.00%
+
+              precision  recall  f1-score  support
+       <=50K       0.75    1.00      0.86        3
+        >50K       1.00    0.50      0.67        2
+
+Confusion Matrix:
+ Predicted → <=50K  >50K
+ Actual <=50K   3     0
+ Actual  >50K   1     1
+```
+
+⚠️ **5-row test set** — results are directional only. One wrong prediction changes accuracy by 20%.
+
+---
+
+### Dataset v2 — 220 rows / 9 columns / 12 missing values / 63–37 imbalance
+
+> Run with `dropna()` since the original pipeline has no imputer. 12 rows dropped.
+
+```
+Train: 166 rows | Test: 42 rows
+
+Accuracy: 78.57%
+
+              precision  recall  f1-score  support
+       <=50K       0.77    0.92      0.84       26
+        >50K       0.82    0.56      0.67       16
+
+Confusion Matrix:
+ Predicted → <=50K  >50K
+ Actual <=50K  24     2
+ Actual  >50K   7     9
+```
+
+---
+
+### What the numbers tell us
+
+| Metric | v1 result | v2 result | Why it changed |
+|---|---|---|---|
+| Accuracy | 80% | 79% | Similar, but v2 is statistically meaningful |
+| `>50K` recall | 50% | 56% | More training data helps minority class |
+| `>50K` F1 | 0.67 | 0.67 | Consistent — F1 is the honest metric here |
+| Test set size | **5 rows** | **42 rows** | v2 results are actually trustworthy |
+
+**Key insight:** The old pipeline drops 12 rows with missing values — the MLOps pipeline imputes them instead, recovering those rows for training. The MLflow runs (baseline) achieved F1=0.667 and ROC-AUC=0.795 using all 176 training rows.
+
+> Full MLflow experiment results → [`docs/runs/2026-03-11-mlops-run.md`](docs/runs/2026-03-11-mlops-run.md)
+
+---
+
 ## Prerequisites
 
 - GitHub account with [Copilot Individual or Business](https://github.com/features/copilot)
