@@ -1,5 +1,20 @@
 # 00 — What are GitHub Copilot CLI Skills?
 
+## Two tools, one name
+
+Before anything else — there are two separate tools that both carry the "Copilot CLI" label:
+
+| Tool | Command | Has a skill system? |
+|------|---------|---------------------|
+| `gh copilot suggest` / `gh copilot explain` | Shell command helper | ❌ No |
+| **`copilot`** (Copilot CLI agent) | Full agentic coding assistant in your terminal | ✅ Yes |
+
+**The skills in this repo only work with the `copilot` agent**, not `gh copilot suggest`. Install it with `curl -fsSL https://gh.io/copilot-install | bash`, then launch with `copilot` inside your project directory.
+
+See [05-using-skills-in-cli.md](05-using-skills-in-cli.md) for full invocation mechanics.
+
+---
+
 ## The mental model
 
 Think of a **skill** as a specialist you can hire for a specific task.

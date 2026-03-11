@@ -13,6 +13,24 @@ This repo teaches you to go from zero to a full skill-sharing workflow, document
 
 ---
 
+## ⚠️ Two tools, one name — know the difference
+
+| Tool | Command | Skills support |
+|------|---------|---------------|
+| `gh copilot suggest` / `gh copilot explain` | Shell command helper | ❌ No skill system |
+| **`copilot`** (Copilot CLI agent) | Full agentic assistant in your terminal | ✅ Reads `.github/copilot/skills/` automatically |
+
+**The skills in this repo only work with the `copilot` agent.** Install it:
+```bash
+curl -fsSL https://gh.io/copilot-install | bash
+# or: brew install copilot-cli
+# or: npm install -g @github/copilot
+```
+
+Then launch it in this project with `copilot`. Use `/skills` inside the session to confirm skills are loaded. See [docs/05-using-skills-in-cli.md](docs/05-using-skills-in-cli.md) for the full mechanics.
+
+---
+
 ## Quick start
 
 ```bash
@@ -40,6 +58,7 @@ pip install -r requirements.txt
 | 2 | [docs/02-skill-anatomy.md](docs/02-skill-anatomy.md) | Every part of a skill file explained |
 | 3 | [docs/03-ml-data-skills.md](docs/03-ml-data-skills.md) | Skills for pandas, scikit-learn, and notebooks |
 | 4 | [docs/04-sharing-across-org.md](docs/04-sharing-across-org.md) | Share skills across your GitHub org |
+| 5 | [docs/05-using-skills-in-cli.md](docs/05-using-skills-in-cli.md) | How to actually invoke skills in a `copilot` session |
 
 ---
 
