@@ -60,6 +60,10 @@ pip install -r requirements.txt
 | 4 | [docs/04-sharing-across-org.md](docs/04-sharing-across-org.md) | Share skills across your GitHub org |
 | 5 | [docs/05-using-skills-in-cli.md](docs/05-using-skills-in-cli.md) | How to actually invoke skills in a `copilot` session |
 
+## Example run output
+
+See [`docs/runs/2026-03-11-workflow-run.md`](docs/runs/2026-03-11-workflow-run.md) for a fully captured end-to-end run — all three skills executed against the example project, with every output saved. Use it as a reference or org demo.
+
 ---
 
 ## Example skills (ready to use)
