@@ -63,22 +63,48 @@ mlflow ui --port 5000
 
 ---
 
-## Dataset: What Changed
+## Dataset: What Changed and Why It Matters
 
-The dataset grew from **25 rows / 6 columns** to **220 rows / 9 columns**:
+The dataset grew from **25 rows / 6 columns** to **220 rows / 9 columns**. Each change was deliberate — it forces the pipeline to solve a real-world problem.
 
-| Field | Before | After |
+### Size & balance
+
+| Property | v1 (original) | v2 (current) |
 |---|---|---|
-| Rows | 25 | 220 |
-| Features | 6 | 9 |
-| New features | — | `marital_status`, `gender`, `native_country` |
-| Missing values | None | 5 in `age`, 7 in `hours_per_week` |
-| Class balance | 52/48% | 63/37% (mild imbalance) |
+| Rows | 25 | **220** |
+| Test split size | 5 rows (meaningless) | **44 rows** (statistically valid) |
+| Class balance | 52% / 48% (balanced) | **63% / 37%** (mild imbalance) |
+| Minority class | — | 82 rows labelled `>50K` |
 
-The added complexity makes the pipeline demonstrate **real-world patterns**:
-- Imputation for missing values
-- Categorical encoding for 4 string columns
-- Class-weighted training for imbalance
+**Why imbalance matters:** A model that always predicts `<=50K` gets **63% accuracy** without learning anything. That's why we track F1 and ROC-AUC instead, and use `class_weight='balanced'` in training.
+
+### New features
+
+| Column | Type | Why added |
+|---|---|---|
+| `marital_status` | categorical (5 values) | Correlated with income in real census data |
+| `gender` | categorical (2 values) | Common fairness audit dimension |
+| `native_country` | categorical (7 values) | Adds cardinality — harder for encoder to generalise |
+
+### Missing values (new in v2)
+
+| Column | Missing count | Missing % | How handled |
+|---|---|---|---|
+| `age` | 5 | 2.3% | Median imputation in `preprocessing.py` |
+| `hours_per_week` | 7 | 3.2% | Median imputation in `preprocessing.py` |
+
+Both are **below the 20% threshold** in `data_validation.py` so the pipeline warns but continues. If either exceeded 20%, Stage 1 would abort.
+
+**Why float dtype for age?** pandas converts integer columns containing `NaN` to `float64` automatically — that's why `age` appears as `float64` in the schema.
+
+### Impact on the pipeline stages
+
+| Stage | v1 behaviour | v2 behaviour |
+|---|---|---|
+| Validate | Not needed (simple, clean data) | Checks 9 columns, catches nulls, warns on imbalance |
+| Preprocess | 1 LabelEncoder (occupation only) | Median imputer + 4 LabelEncoders + StandardScaler |
+| Train | No class weighting needed | `class_weight='balanced'` required |
+| Evaluate | Accuracy sufficient | F1 + ROC-AUC needed to see past majority-class bias |
 
 ---
 

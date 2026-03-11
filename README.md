@@ -109,6 +109,46 @@ All six skills live in [`.github/copilot/skills/`](.github/copilot/skills/) and 
 
 ---
 
+## Dataset: what's in `examples/data/sample.csv`
+
+The dataset simulates an **income-bracket prediction** problem — a classic ML task with real-world complexity baked in.
+
+| Property | Value |
+|---|---|
+| Rows | 220 |
+| Features | 9 (8 input + 1 target) |
+| Target | `income_bracket` — `>50K` or `<=50K` |
+| Class balance | 63% `<=50K` / 37% `>50K` (mild imbalance) |
+| Missing values | `age`: 5 nulls · `hours_per_week`: 7 nulls |
+
+### Columns
+
+| Column | Type | Notes |
+|---|---|---|
+| `age` | numeric (float) | 18–75, **5 missing** → median-imputed |
+| `income` | numeric (int) | Annual income in $, 15k–140k |
+| `education_years` | numeric (int) | Years of formal education, 6–20 |
+| `hours_per_week` | numeric (float) | Weekly work hours, 20–80, **7 missing** → median-imputed |
+| `occupation` | categorical | Tech, Sales, Service, Admin, Professional, Craft, Transport, Other |
+| `marital_status` | categorical | Married, Single, Divorced, Widowed, Separated |
+| `gender` | categorical | Male, Female |
+| `native_country` | categorical | United-States (60%), Mexico, Philippines, Germany, Canada, India, Other |
+| `income_bracket` | target | `>50K` or `<=50K` |
+
+### How it evolved
+
+| | Original (v1) | Current (v2) |
+|---|---|---|
+| Rows | 25 | **220** |
+| Columns | 6 | **9** |
+| Missing values | None | **12 cells** (age + hours_per_week) |
+| Class balance | 52/48% (balanced) | **63/37%** (imbalanced) |
+| New features | — | `marital_status`, `gender`, `native_country` |
+
+The added complexity drives real MLOps requirements: imputation, class-weighted training, F1 over accuracy, and schema validation before every run. See [docs/06-mlops-with-skills.md](docs/06-mlops-with-skills.md) for how the pipeline handles each one.
+
+---
+
 ## Prerequisites
 
 - GitHub account with [Copilot Individual or Business](https://github.com/features/copilot)
