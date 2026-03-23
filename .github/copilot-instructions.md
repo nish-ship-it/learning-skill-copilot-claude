@@ -69,6 +69,7 @@ The orchestrator `pipeline_runner.py` accepts `--n-estimators`, `--max-depth`, a
 | `validate-data.md` | Data validation, check data quality, is my CSV ready for training |
 | `train-model.md` | Train the model, run the ML pipeline, start an MLflow experiment |
 | `evaluate-model.md` | Compare runs, show leaderboard, which hyperparameters worked best |
+| `tune-hyperparameters.md` | Hyperparameter tuning, grid search, parameter sweep, improve accuracy |
 
 ## Conventions
 
