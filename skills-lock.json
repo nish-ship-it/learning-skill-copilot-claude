@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "rt-branded-pdf": {
+      "source": "rio-tinto/rt-skills",
+      "sourceType": "github",
+      "computedHash": "078707e839925e54168f062e66e50644f7f03da3f06385789fafd6f97ebaca0f"
+    }
+  }
+}
